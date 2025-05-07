@@ -127,7 +127,7 @@ def plot_cv():
 
 def main():
     # 测试一些特征温度点的热容值
-    test_temperatures = [5, 100, 300, 500]
+    test_temperatures = [5, 50, 100, 300, 500, 1000]
     print("\n测试不同温度下的热容值：")
     print("-" * 40)
     print("温度 (K)\t热容 (J/K)")
