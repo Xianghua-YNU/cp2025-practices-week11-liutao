@@ -6,7 +6,7 @@ MU0 = 4 * np.pi * 1e-7  # 真空磁导率 (T*m/A)
 I = 1.0  # 电流 (A) - 假设为1A，实际计算中常数因子可以合并
 
 def Helmholtz_coils(r_low, r_up, d):
-   '''
+    '''
     计算亥姆霍兹线圈（或两个不同半径线圈）的磁场。
     输入:
         r_low: 下方线圈的半径 (m)
@@ -81,3 +81,5 @@ if __name__ == "__main__":
     coil_radius = 0.5  # 线圈半径 (m)
     coil_distance = 0.5 # 线圈间距 (m)
     plot_magnetic_field_streamplot(coil_radius, coil_radius, coil_distance)
+    
+    
