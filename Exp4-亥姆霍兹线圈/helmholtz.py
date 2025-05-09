@@ -47,7 +47,7 @@ def Helmholtz_coils(r_low, r_up, d):
     By = scaling_factor * By_unscaled
     Bz = scaling_factor * Bz_unscaled
     
-    return Y[:, :, 0], Z[:, :, 0], By, Bz
+    return Y, Z, By, Bz
 
 def plot_magnetic_field_streamplot(r_low, r_up, d):
     Y, Z, By, Bz = Helmholtz_coils(.5,.5,0.8)
