@@ -30,15 +30,17 @@ def Helmholtz_coils(r_low, r_up, d):
     #    y_coords = np.linspace(-2*max_r, 2*max_r, 25) # y坐标范围和点数
     #    z_coords = np.linspace(-1.5*d, 1.5*d, 25)   # z坐标范围和点数 (调整范围以更好显示)
     # 学生代码开始
-    phi_angles = None # 占位符
-    y_coords = None   # 占位符
-    z_coords = None   # 占位符
+    phi = np.linspace(0, 2*np.pi, 20)
+    # 定义空间网格范围
+    r = max(r_low, r_up)
+    y = np.linspace(-2*r, 2*r, 25)
+    z = np.linspace(-2*d, 2*d, 25)
     # 学生代码结束
 
     # 2. 创建三维网格 Y, Z, Phi (用于后续计算)
     #    Y, Z, Phi = np.meshgrid(y_coords, z_coords, phi_angles)
     # 学生代码开始
-    Y, Z, Phi = None, None, None # 占位符
+    Y, Z, phi = np.meshgrid(y, z, phi)
     # 学生代码结束
 
     # 3. 计算到下方线圈 (r_low, 中心在 z=-d/2) 上各电流元的距离 dist1
@@ -46,7 +48,8 @@ def Helmholtz_coils(r_low, r_up, d):
     #    dist1 = np.sqrt(dist1_sq)
     #    dist1[dist1 < 1e-9] = 1e-9 # 避免除零
     # 学生代码开始
-    dist1 = None # 占位符
+    r1 = np.sqrt((r_low * np.cos(phi))**2 + (Y - r_low * np.sin(phi))**2 + (Z - d/2)**2)
+    r1[r1 < 1e-9] = 1e-9
     # 学生代码结束
 
     # 4. 计算到上方线圈 (r_up, 中心在 z=+d/2) 上各电流元的距离 dist2
@@ -54,7 +57,8 @@ def Helmholtz_coils(r_low, r_up, d):
     #    dist2 = np.sqrt(dist2_sq)
     #    dist2[dist2 < 1e-9] = 1e-9
     # 学生代码开始
-    dist2 = None # 占位符
+    r2 = np.sqrt((r_up * np.cos(phi))**2 + (Y - r_up * np.sin(phi))**2 + (Z + d/2)**2)
+    r2[r2 < 1e-9] = 1e-9
     # 学生代码结束
 
     # 5. 计算磁场贡献的被积函数 dBy_integrand 和 dBz_integrand
@@ -63,8 +67,8 @@ def Helmholtz_coils(r_low, r_up, d):
     #    dBz_integrand = r_low * (r_low - Y * np.sin(Phi)) / dist1**3 + \
     #                    r_up  * (r_up  - Y * np.sin(Phi)) / dist2**3
     # 学生代码开始
-    dBy_integrand = None # 占位符
-    dBz_integrand = None # 占位符
+    dBy = (r_low * (Z - d/2) * np.sin(phi)) / r1**3 + (r_up * (Z + d/2) * np.sin(phi)) / r2**3
+    dBz = (r_low * (r_low - Y * np.sin(phi))) / r1**3 + (r_up * (r_up - Y * np.sin(phi))) / r2**3
     # 学生代码结束
 
     # 6. 对 phi_angles 进行数值积分 (例如使用 np.trapezoid)
@@ -72,8 +76,8 @@ def Helmholtz_coils(r_low, r_up, d):
     #    By_unscaled = np.trapezoid(dBy_integrand, x=phi_angles, axis=-1) # 或 dx=delta_phi
     #    Bz_unscaled = np.trapezoid(dBz_integrand, x=phi_angles, axis=-1) # 或 dx=delta_phi
     # 学生代码开始
-    By_unscaled = None # 占位符
-    Bz_unscaled = None # 占位符
+    By_unscaled = np.trapz(dBy, x=phi[0,0,:], axis=2)
+    Bz_unscaled = np.trapz(dBz, x=phi[0,0,:], axis=2)
     # 学生代码结束
 
     # 7. 引入物理常数因子得到真实的磁场值 (单位 T)
@@ -81,14 +85,15 @@ def Helmholtz_coils(r_low, r_up, d):
     #    By = scaling_factor * By_unscaled
     #    Bz = scaling_factor * Bz_unscaled
     # 学生代码开始
-    By = None # 占位符
-    Bz = None # 占位符
+    scaling_factor = (MU0 * I) / (4 * np.pi)
+    By = scaling_factor * By_unscaled
+    Bz = scaling_factor * Bz_unscaled
     # 学生代码结束
     
     print("磁场计算完成.")
     # 返回用于绘图的2D网格 (取一个phi切片) 和计算得到的磁场分量
     # return Y[:,:,0], Z[:,:,0], By, Bz
-    return None, None, None, None # 学生需要修改返回值
+    return Y[:, :, 0], Z[:, :, 0], By, Bz # 学生需要修改返回值
 
 
 def plot_magnetic_field_streamplot(r_coil_1, r_coil_2, d_coils):
@@ -99,7 +104,7 @@ def plot_magnetic_field_streamplot(r_coil_1, r_coil_2, d_coils):
     # 1. 调用 Helmholtz_coils 函数获取磁场数据
     #    Y_plot, Z_plot, By_field, Bz_field = Helmholtz_coils(r_coil_1, r_coil_2, d_coils)
     # 学生代码开始
-    Y_plot, Z_plot, By_field, Bz_field = None, None, None, None # 占位符
+    Y, Z, By, Bz = Helmholtz_coils(r_low, r_up, d)
     # 学生代码结束
 
     if Y_plot is None: # 检查计算是否成功
@@ -113,7 +118,9 @@ def plot_magnetic_field_streamplot(r_coil_1, r_coil_2, d_coils):
     #    sy, sz = np.meshgrid(y_start_coords, 0) # 例如从z=0平面开始
     #    start_points = np.vstack([sy.ravel(), sz.ravel()]).T
     # 学生代码开始
-    start_points = None # 占位符, 如果为None，streamplot会自动选择起点
+    bSY = np.linspace(-0.8*r_low, 0.8*r_low, 10)
+    bSY, bSZ = np.meshgrid(bSY, 0)
+    start_points = np.vstack([bSY.ravel(), bSZ.ravel()]).T
     # 学生代码结束
 
     # 3. 使用 plt.streamplot 绘制磁场流线图
@@ -121,7 +128,9 @@ def plot_magnetic_field_streamplot(r_coil_1, r_coil_2, d_coils):
     #                   density=1.5, color='k', linewidth=1.0,
     #                   arrowstyle='->', arrowsize=1.0, start_points=start_points)
     # 学生代码开始
-    pass # 占位符
+    plt.figure(figsize=(8, 6))
+    plt.streamplot(Y, Z, By, Bz, density=1.5, color='k', 
+                   arrowstyle='->', start_points=start_points)
     # 学生代码结束
 
     # 4. 绘制线圈的截面位置 (用于参考)
@@ -134,7 +143,8 @@ def plot_magnetic_field_streamplot(r_coil_1, r_coil_2, d_coils):
     #    plt.plot([r_coil_2, r_coil_2], [d_coils/2-0.02, d_coils/2+0.02], 'r-', linewidth=3)
     #    plt.text(0, d_coils/2 + 0.1*max(r_coil_1,r_coil_2,d_coils), f'Coil 2 (R={r_coil_2})', color='red', ha='center')
     # 学生代码开始
-    pass # 占位符
+    plt.plot([-r_low, r_low], [-d/2, -d/2], 'b-', lw=2, label=f'Lower Coil (R={r_low}m)')
+    plt.plot([-r_up, r_up], [d/2, d/2], 'r-', lw=2, label=f'Upper Coil (R={r_up}m)')
     # 学生代码结束
 
     # 5. 设置图形属性
@@ -145,10 +155,15 @@ def plot_magnetic_field_streamplot(r_coil_1, r_coil_2, d_coils):
     #    plt.grid(True, linestyle='--', alpha=0.7)
     #    # plt.legend() # 如果有label的plot元素
     # 学生代码开始
-    pass # 占位符
+    plt.xlabel('y (m)')
+    plt.ylabel('z (m)')
+    plt.title(f'Helmholtz Coils: R1={r_low}m, R2={r_up}m, d={d}m')
+    plt.gca().set_aspect('equal')
+    plt.grid(True, linestyle='--', alpha=0.7)
+    plt.legend()
+    plt.show()
     # 学生代码结束
 
-    plt.show()
     print("绘图完成.")
 
 # --- 主程序 ---
