@@ -39,8 +39,8 @@ def Helmholtz_coils(r_low, r_up, d):
     dBz = (r_low * (r_low - Y * np.sin(phi))) / r1**3 + (r_up * (r_up - Y * np.sin(phi))) / r2**3
     
     # 对phi轴进行积分（显式指定积分轴和间隔）
-    By_unscaled = np.trapz(dBy, x=phi[0,0,:], axis=2)
-    Bz_unscaled = np.trapz(dBz, x=phi[0,0,:], axis=2)
+    By_unscaled = np.trapezoid(dBy, x=phi[0,0,:], axis=2)
+    Bz_unscaled = np.trapezoid(dBz, x=phi[0,0,:], axis=2)
     
     # 应用比例因子
     scaling_factor = (MU0 * I) / (4 * np.pi)
