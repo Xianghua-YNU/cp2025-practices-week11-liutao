@@ -69,7 +69,7 @@ def plot_magnetic_field_streamplot(r_low, r_up, d):
     # 设置图形属性
     plt.xlabel('y (m)')
     plt.ylabel('z (m)')
-    plt.title(f'Helmholtz Coils: R1={r_low}m, R2={r_up}m, d={d}m')
+    plt.title(f'Helmholtz Coils: R={coil_radius}, d={coil_distance}')
     plt.gca().set_aspect('equal')
     plt.grid(True, linestyle='--', alpha=0.7)
     plt.legend()
