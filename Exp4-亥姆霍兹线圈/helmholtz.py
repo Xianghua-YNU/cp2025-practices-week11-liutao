@@ -170,12 +170,10 @@ def plot_magnetic_field_streamplot(r_coil_1, r_coil_2, d_coils):
 if __name__ == "__main__":
     # 定义线圈参数 - 学生可以修改这些值进行测试
     # 标准亥姆霍兹线圈: r1 = r2 = R, d = R
-    radius_1 = 0.5  # 下方线圈半径 (m)
-    radius_2 = 0.5  # 上方线圈半径 (m)
-    distance_between_coils = 0.5  # 两线圈中心距离 (m)
-
+    coil_radius = 0.5  # 线圈半径 (m)
+    coil_distance = 0.5 # 线圈间距 (m)
+    plot_magnetic_field_streamplot(coil_radius, coil_radius, coil_distance)
     # 调用绘图函数，该函数内部会调用计算函数
-    plot_magnetic_field_streamplot(radius_1, radius_2, distance_between_coils)
 
     # 额外的测试用例 (可选)
     # print("\nTesting with different parameters (e.g., non-Helmholtz):")
