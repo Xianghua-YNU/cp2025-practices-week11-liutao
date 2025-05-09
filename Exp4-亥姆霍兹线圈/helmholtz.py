@@ -50,12 +50,12 @@ def Helmholtz_coils(r_low, r_up, d):
     return Y[:, :, 0], Z[:, :, 0], By, Bz
 
 def plot_magnetic_field_streamplot(r_low, r_up, d):
-    Y, Z, By, Bz = Helmholtz_coils(r_low, r_up, d)
+    Y, Z, By, Bz = Helmholtz_coils(.5,.5,0.8)
     
     # 设置流线起始点（z=0平面）
-    bSY = np.linspace(-0.8*r_low, 0.8*r_low, 10)
+    bSY = np.arange(-0.45,0.50,0.05)
     bSY, bSZ = np.meshgrid(bSY, 0)
-    start_points = np.vstack([bSY.ravel(), bSZ.ravel()]).T
+    start_points = np.vstack([bSY, bSZ]).T
     
     # 绘制流线图
     plt.figure(figsize=(8, 6))
